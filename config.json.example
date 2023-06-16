@@ -1,0 +1,12 @@
+{
+  "projects": [
+    "urls",
+    "telegram",
+    "reddit",
+    "imgur",
+  ],
+  "influx_host": "https://influxdb.example.com",
+  "influx_bucket": "archiveteam",
+  "influx_org": "admin",
+  "influx_api_token": "apitokenbla",
+}
