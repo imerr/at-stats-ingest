@@ -5,8 +5,11 @@
     "reddit",
     "imgur"
   ],
+  "summaries": {
+    "my-projects": ["imgur", "reddit"]
+  },
   "influx_host": "https://influxdb.example.com",
   "influx_bucket": "archiveteam",
   "influx_org": "admin",
-  "influx_api_token": "apitokenbla",
+  "influx_api_token": "apitokenbla"
 }
