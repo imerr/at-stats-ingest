@@ -281,11 +281,17 @@ async fn work(config: Arc<Config>, cancel: CancellationToken, http_client: Arc<H
             write_stats(project_point, downloader_points, &influx_client, &config.influx_bucket).await;
             info!("Wrote stat summary for {summary}");
         }
+        let sleep_duration = Duration::from_secs(config.interval);
+        let elapsed = start.elapsed();
+        if elapsed > sleep_duration {
+            continue;
+        }
+        let s = sleep(Duration::from_secs(config.interval) - start.elapsed());
         select! {
             _ = cancel.cancelled() => {
                 return;
             }
-            _ = sleep(Duration::from_secs(config.interval) - start.elapsed()) => {continue;}
+            _ = s => {continue;}
         }
     }
 }
@@ -294,7 +300,7 @@ async fn fetch(project: String, config: Arc<Config>, http_client: Arc<HttpClient
     let start = Instant::now();
     match http_client.get(format!("https://legacy-api.arpa.li/{project}/stats.json")).send().await {
         Ok(res) => {
-            let now = Utc::now().timestamp_nanos();
+            let now = Utc::now().timestamp_nanos_opt().unwrap();
             if res.status().is_success() {
                 match res.text().await {
                     Ok(body) => {
